@@ -18,11 +18,7 @@ ma = Marshmallow(app)
 # >>> from crud import db
 # >>> db.create_all()
 
-# what about these:
-# db = SQLAlchemy()
-# db.app = app
 db.init_app(app)
-# db.create_all()
 
 
 class User(db.Model):
@@ -41,13 +37,11 @@ class User(db.Model):
 class UserSchema(ma.Schema):
     class Meta:
         fileds = ('username', 'email')
-#what is this for????
 
 user_schema = UserSchema()
 users_schema = UserSchema(many=True)
 
 #endpoint to create users
-
 @app.route("/")
 def hello():
     return "Hello Sam"
@@ -59,7 +53,6 @@ def add_user():
 
     username = request.json['username']
     email = request.json['email']
-    # why .json??? otherwise what is it?
 
     new_user = User(username, email)
 
@@ -71,6 +64,7 @@ def add_user():
 
     return user_schema.jsonify(new_user)
 
+
 @app.route("/user", methods=["GET"])
 def get_user():
     all_users = User.query.all()
@@ -78,10 +72,12 @@ def get_user():
     # need explaination
     return jsonify(result.data)
 
+
 @app.route("/user/<id>", methods=["GET"])
 def user_detail(id):
     user=User.query.get(id)
     return user_schema.jsonify(user)
+
 
 # endpoint to update user
 @app.route("/user/<id>", methods=["PUT"])
@@ -96,8 +92,6 @@ def user_update(id):
     db.session.commit()
     return user_schema.jsonify(user)
 
-    # when to user post and when put?
-
 
 @app.route("/user/<id>", methods=["DELETE"])
 def user_delete(id):
@@ -105,7 +99,8 @@ def user_delete(id):
     db.session.delete(user)
     db.session.commit()
 
-    return user_schema.jsonify(user) #why?
+    return user_schema.jsonify(user)
 
 if __name__ == "__main__":
     app.run(debug=True, host='0.0.0.0')
+    
